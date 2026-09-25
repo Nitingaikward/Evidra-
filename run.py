@@ -1,6 +1,6 @@
 """
 run.py — Unified single-command launcher for Evidra (RECON).
-Launches both the FastAPI backend (Port 8000) and the Lovable Frontend (Port 5173) together in a single process.
+Launches both the backend and frontend unified under ONE single localhost link: http://127.0.0.1:8000/
 """
 
 import os
@@ -8,15 +8,14 @@ import sys
 import time
 import subprocess
 import webbrowser
-import signal
 
 def main():
     root_dir = os.path.dirname(os.path.abspath(__file__))
     frontend_dir = os.path.join(root_dir, "frontend")
 
-    print("\n" + "=" * 70)
+    print("\n" + "=" * 75)
     print(" 🔬 EVIDRA (RECON) — UNIFIED FORENSIC SUITE LAUNCHER")
-    print("=" * 70)
+    print("=" * 75)
     print(" [1/2] Starting Python FastAPI Backend on http://127.0.0.1:8000 ...")
 
     # Start backend server
@@ -27,7 +26,7 @@ def main():
 
     time.sleep(2)
 
-    print(" [2/2] Starting Lovable Frontend UI on http://127.0.0.1:5173 ...")
+    print(" [2/2] Starting Lovable Frontend UI Engine ...")
     
     # Start frontend server
     frontend_cmd = "npx vite dev --host 127.0.0.1 --port 5173"
@@ -39,17 +38,17 @@ def main():
 
     time.sleep(3)
 
-    print("\n" + "=" * 70)
-    print(" 🚀 BOTH FRONTEND & BACKEND ARE NOW RUNNING TOGETHER!")
-    print("=" * 70)
-    print("  🎨 Interactive Frontend Workstation : http://127.0.0.1:5173/")
-    print("  ⚡ Backend REST API & Swagger Docs   : http://127.0.0.1:8000/docs")
-    print("=" * 70)
-    print(" Press CTRL+C at any time to stop both servers.\n")
+    print("\n" + "=" * 75)
+    print(" 🚀 UNIFIED WORKSTATION READY UNDER ONE SINGLE LINK!")
+    print("=" * 75)
+    print("  ⭐ Open Full Forensic Application: http://127.0.0.1:8000/")
+    print("  ⚡ Swagger API Documentation      : http://127.0.0.1:8000/docs")
+    print("=" * 75)
+    print(" Press CTRL+C at any time to stop the suite.\n")
 
-    # Open browser automatically
+    # Open single unified browser URL
     try:
-        webbrowser.open("http://127.0.0.1:5173/")
+        webbrowser.open("http://127.0.0.1:8000/")
     except Exception:
         pass
 
