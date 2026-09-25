@@ -1,0 +1,26 @@
+# Core Scientific / ML
+numpy>=1.26.0
+pandas>=2.2.0
+scikit-learn>=1.4.0
+lightgbm>=4.3.0
+
+# File Type & Forensics
+magika>=0.5.0
+pytsk3>=20231007; sys_platform != "win32"
+pillow>=10.2.0
+pypdf>=4.0.0
+cryptography>=42.0.0
+
+# Similarity & Fuzzy Hashing
+py-tlsh>=4.7.2
+ppdeep>=20200505
+
+# Graph & Network
+networkx>=3.2.1
+pyvis>=0.3.2
+
+# UI & Web
+streamlit>=1.32.0
+
+# Utilities
+tqdm>=4.66.0
