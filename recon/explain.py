@@ -1,5 +1,5 @@
 """
-explain.py — AI Document Intelligence powered by Groq (Llama 3.3 70B).
+explain.py — AI Document Intelligence powered by Groq (qwen/qwen3.8-27b & openai/gpt-oss-120b).
 
 Generates 2-sentence document summaries and entity extractions for recovered text & document artifacts.
 All LLM responses are strictly tagged with ai_generated=True for forensic transparency.
@@ -10,18 +10,20 @@ import json
 import time
 import logging
 from typing import Dict, List, Tuple, Any, Optional
+from dotenv import load_dotenv
 
 import groq
 from recon.db import get_connection
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_GROQ_MODEL = "llama-3.3-70b-versatile"
+DEFAULT_GROQ_MODEL = "qwen/qwen3.8-27b"
 
 def get_groq_client() -> Optional[groq.Groq]:
     """Retrieves Groq API client instance from environment variables."""
+    load_dotenv()
     api_key = os.environ.get("GROQ_API_KEY")
-    if not api_key or api_key.startswith("gsk_..."):
+    if not api_key or api_key.startswith("gsk_...") and len(api_key) < 20:
         logger.warning("GROQ_API_KEY environment variable not configured. Groq AI summaries will operate in mock mode.")
         return None
     try:
@@ -37,7 +39,7 @@ def summarize_artifact(
     client: Optional[groq.Groq] = None
 ) -> Dict[str, Any]:
     """
-    Sends extracted artifact text payload to Groq Llama 3.3 70B for document intelligence:
+    Sends extracted artifact text payload to Groq API for document intelligence:
     Returns dict: {summary: str, entities: dict, model: str, ai_generated: True}
     """
     if not text or len(text.strip()) == 0:
@@ -51,7 +53,6 @@ def summarize_artifact(
     if client is None:
         client = get_groq_client()
 
-    # Fallback/Mock mode if Groq key is not present
     if client is None:
         snippet = text[:150].replace("\n", " ")
         return {
@@ -98,7 +99,7 @@ Respond ONLY with valid JSON.
         time.sleep(5)
         return summarize_artifact(text, file_type, artifact_name, client)
     except Exception as e:
-        logger.error(f"Error invoking Groq Llama 3.3 70B API: {e}")
+        logger.error(f"Error invoking Groq API: {e}")
         return {
             'summary': f"Failed to generate AI summary: {e}",
             'entities': {},
@@ -167,7 +168,6 @@ def batch_summarize(
             
         summary_data = summarize_artifact(text, mime, name, client)
         
-        # Insert into summaries table
         conn.execute(
             "INSERT OR REPLACE INTO summaries (artifact_id, summary, entities) VALUES (?, ?, ?);",
             (art_id, summary_data['summary'], json.dumps(summary_data['entities']))
