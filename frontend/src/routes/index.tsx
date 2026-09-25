@@ -26,8 +26,8 @@ export const Route = createFileRoute("/")({
 
 function Overview() {
   const { data } = useCaseOverview();
-  if (!data) return null;
-  const { kpis, benchmarks } = data;
+  const kpis = data?.kpis ?? KPIS;
+  const benchmarks = data?.benchmarks ?? BENCHMARKS;
 
   return (
     <Shell title="Dashboard">

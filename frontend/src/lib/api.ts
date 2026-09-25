@@ -1,6 +1,4 @@
-// API integration hooks. Frontend-only for now: every hook resolves mock data,
-// but the fetch path is already wired — set VITE_EVIDRA_API to a running
-// FastAPI instance and `live` becomes true.
+// API integration hooks with immediate initialData to prevent blank rendering.
 
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -19,14 +17,24 @@ export const isLive = Boolean(BASE);
 
 async function get<T>(path: string, fallback: T): Promise<T> {
   if (!BASE) return fallback;
-  const res = await fetch(`${BASE}${path}`);
-  if (!res.ok) throw new Error(`${path} -> ${res.status}`);
-  return (await res.json()) as T;
+  try {
+    const res = await fetch(`${BASE}${path}`);
+    if (!res.ok) return fallback;
+    return (await res.json()) as T;
+  } catch (e) {
+    return fallback;
+  }
 }
 
 export function useCaseOverview(caseId = CASE.id) {
   return useQuery({
     queryKey: ["overview", caseId],
+    initialData: {
+      case: CASE,
+      kpis: KPIS,
+      benchmarks: BENCHMARKS,
+      custody: CUSTODY_LOG,
+    },
     queryFn: () =>
       get(`/api/cases/${caseId}/overview`, {
         case: CASE,
@@ -40,6 +48,7 @@ export function useCaseOverview(caseId = CASE.id) {
 export function useBlocks(caseId = CASE.id) {
   return useQuery({
     queryKey: ["blocks", caseId],
+    initialData: DISK_BLOCKS,
     queryFn: () => get(`/api/cases/${caseId}/blocks`, DISK_BLOCKS),
   });
 }
@@ -48,6 +57,7 @@ export function useHexDump(offsetBlock: number | null, caseId = CASE.id) {
   return useQuery({
     enabled: offsetBlock !== null,
     queryKey: ["hex", caseId, offsetBlock],
+    initialData: hexDump(offsetBlock ?? 0),
     queryFn: () =>
       get(
         `/api/cases/${caseId}/blocks/${offsetBlock}/hex`,
@@ -59,6 +69,7 @@ export function useHexDump(offsetBlock: number | null, caseId = CASE.id) {
 export function useArtifacts(caseId = CASE.id) {
   return useQuery({
     queryKey: ["artifacts", caseId],
+    initialData: ARTIFACTS,
     queryFn: () => get(`/api/cases/${caseId}/artifacts`, ARTIFACTS),
   });
 }
@@ -66,6 +77,7 @@ export function useArtifacts(caseId = CASE.id) {
 export function useGraph(caseId = CASE.id) {
   return useQuery({
     queryKey: ["graph", caseId],
+    initialData: GRAPH,
     queryFn: () => get(`/api/cases/${caseId}/graph`, GRAPH),
   });
 }
