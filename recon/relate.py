@@ -13,9 +13,14 @@ import io
 import hashlib
 import logging
 from typing import Dict, List, Tuple, Any, Optional
-
 import networkx as nx
-import ppdeep
+
+try:
+    import ppdeep
+    HAS_PPDEEP = True
+except ImportError:
+    ppdeep = None
+    HAS_PPDEEP = False
 
 try:
     import tlsh

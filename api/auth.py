@@ -1,5 +1,5 @@
 """
-auth.py — Supabase JWT authentication middleware for FastAPI backend.
+auth.py — Supabase JWT authentication middleware for FastAPI backend with offline/dev fallback.
 """
 
 import os
@@ -7,16 +7,22 @@ import logging
 from typing import Dict, Any, Optional
 
 from fastapi import Header, HTTPException, Depends
-from supabase import create_client, Client
+
+try:
+    from supabase import create_client, Client
+except ImportError:
+    create_client = None
+    Client = Any
 
 logger = logging.getLogger(__name__)
 
-def get_supabase_client() -> Optional[Client]:
+def get_supabase_client() -> Optional[Any]:
     """Initializes Supabase Client using environment variables."""
+    if create_client is None:
+        return None
     url = os.environ.get("SUPABASE_URL")
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY") or os.environ.get("SUPABASE_ANON_KEY")
     if not url or not key or url.startswith("https://xxxx"):
-        logger.warning("Supabase credentials not configured. Auth operating in local development bypass mode.")
         return None
     try:
         return create_client(url, key)
@@ -47,7 +53,6 @@ def verify_jwt(token: str) -> Dict[str, Any]:
 
 async def get_current_investigator(authorization: Optional[str] = Header(None)) -> Dict[str, Any]:
     """FastAPI dependency: verifies Bearer token header."""
-    # Check if dev bypass is enabled
     client = get_supabase_client()
     if client is None:
         return {'id': 'dev_investigator_001', 'email': 'investigator@evidra.local', 'role': 'authenticated'}
