@@ -79,6 +79,10 @@ async def reverse_proxy_frontend(request: Request, full_path: str):
     if full_path.startswith("api") or full_path in ["docs", "openapi.json", "redoc", "health"]:
         return Response(status_code=404, content="Not found")
 
+    # Exclude raw websocket upgrade attempts on HTTP proxy
+    if request.headers.get("upgrade", "").lower() == "websocket":
+        return Response(status_code=204)
+
     target_url = f"{FRONTEND_DEV_URL}/{full_path}"
     if request.url.query:
         target_url += f"?{request.url.query}"
@@ -96,6 +100,9 @@ async def reverse_proxy_frontend(request: Request, full_path: str):
                 follow_redirects=True
             )
             
+            if resp.status_code == 101:
+                return Response(status_code=204)
+
             excluded_headers = ["content-encoding", "transfer-encoding", "connection"]
             resp_headers = {k: v for k, v in resp.headers.items() if k.lower() not in excluded_headers}
             
@@ -112,8 +119,8 @@ async def reverse_proxy_frontend(request: Request, full_path: str):
                 <head><title>Evidra Forensics</title></head>
                 <body style="background:#0b0f19;color:#fff;font-family:sans-serif;padding:40px;text-align:center;">
                     <h2>🔬 Evidra (RECON)</h2>
-                    <p style="color:#94a3b8;">Backend is active. Frontend is starting up...</p>
-                    <p><a href="http://127.0.0.1:5173" style="color:#6366f1;">Click here to open direct frontend</a></p>
+                    <p style="color:#94a3b8;">Workstation is loading...</p>
+                    <p><a href="http://127.0.0.1:5173" style="color:#6366f1;">Click here if not redirected automatically</a></p>
                 </body>
             </html>
             """,
