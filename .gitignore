@@ -1,4 +1,10 @@
-# Python
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & bytecode
 __pycache__/
 *.py[cod]
 *$py.class
@@ -19,9 +25,6 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-.venv/
-venv/
-ENV/
 
 # Node / Frontend
 frontend/node_modules/
@@ -31,12 +34,29 @@ frontend/.tanstack/
 frontend/.vinxi/
 node_modules/
 
-# Environment / Secrets
+# Case databases & output cases
+cases/
+case_output/
+*.db
+*.sqlite
+*.sqlite3
+
+# Demo binary data & temporary outputs
+data/*.img
+data/*.raw
+data/*.dd
+report.html
+report.json
+test_rep.*
+test_case.*
+
+# Environment Secrets
 .env
 .env.local
 *.local
+!.env.example
 
-# IDE / OS
+# IDE & OS
 .vscode/
 .idea/
 .DS_Store

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "contract_v1.pdf",
+    "type": "pdf",
+    "state": "intact",
+    "byte_ranges": [
+      [
+        8192,
+        11242
+      ]
+    ]
+  },
+  {
+    "name": "contract_v2.pdf",
+    "type": "pdf",
+    "state": "deleted",
+    "byte_ranges": [
+      [
+        16384,
+        19454
+      ]
+    ]
+  },
+  {
+    "name": "locked_payroll.xlsx",
+    "type": "encrypted",
+    "state": "intermittent_ransomware",
+    "byte_ranges": [
+      [
+        32768,
+        63552
+      ]
+    ]
+  },
+  {
+    "name": "suspect_photo.jpg",
+    "type": "jpeg",
+    "state": "fragmented",
+    "byte_ranges": [
+      [
+        65536,
+        69547
+      ],
+      [
+        98304,
+        102306
+      ]
+    ]
+  }
+]
