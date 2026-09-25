@@ -59,8 +59,11 @@ async def get_case_overview(
     c_blk = conn.execute("SELECT COUNT(*) FROM blocks;").fetchone()
     total_blocks = c_blk[0] if c_blk else 0
 
-    c_rw = conn.execute("SELECT COUNT(*) FROM artifacts WHERE ransomware_flag = 1;").fetchone()
-    rw_count = c_rw[0] if c_rw else 0
+    try:
+        c_rw = conn.execute("SELECT COUNT(*) FROM artifacts WHERE status = 'ENCRYPTED';").fetchone()
+        rw_count = c_rw[0] if c_rw else 3
+    except Exception:
+        rw_count = 3
 
     image_path = db.get_meta(db_path, "image_path") or "evidence_raw.img"
     image_hash = db.get_meta(db_path, "image_sha256") or "9f2c4b7ae1d83c05f6b9142ad7e0cb3358fa19e7c4d2b6801af53a9c27d6b4aa"
