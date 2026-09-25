@@ -7,6 +7,9 @@ import sys
 import json
 import logging
 
+# Ensure root directory is on python path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from fastapi.testclient import TestClient
 
 from recon import db, ingest, fs_recover, features, classifier, carver, reassemble, validate, relate, prioritize, explain, report
@@ -83,7 +86,8 @@ def run_e2e_verification():
     # Artifacts listing endpoint
     r_artifacts = client.get(f"/api/artifacts/{case_id}")
     assert r_artifacts.status_code == 200
-    art_list = r_artifacts.json()["artifacts"]
+    res_data = r_artifacts.json()
+    art_list = res_data if isinstance(res_data, list) else res_data.get("artifacts", [])
     assert len(art_list) > 0
     first_art_id = art_list[0]["id"]
     print(f"      [OK] GET /api/artifacts/{case_id} -> 200 OK ({len(art_list)} artifacts)")

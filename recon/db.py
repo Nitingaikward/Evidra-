@@ -13,6 +13,9 @@ logger = logging.getLogger(__name__)
 
 def get_connection(db_path: str) -> sqlite3.Connection:
     """Returns a SQLite connection configured with WAL mode and dict row factory."""
+    parent_dir = os.path.dirname(os.path.abspath(db_path))
+    if parent_dir:
+        os.makedirs(parent_dir, exist_ok=True)
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL;")
