@@ -91,7 +91,7 @@ def serial_correlation(block: bytes) -> float:
     """Pearson correlation coefficient between consecutive bytes x[i] and x[i+1]."""
     if len(block) < 2:
         return 0.0
-    arr = np.frombuffer(block, dtype=np.float64) # Use float64 to avoid overflow
+    arr = np.frombuffer(block, dtype=np.uint8).astype(np.float64)
     x = arr[:-1]
     y = arr[1:]
     var_x = np.var(x)

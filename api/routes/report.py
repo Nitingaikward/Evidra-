@@ -19,7 +19,7 @@ router = APIRouter()
 @router.get("/report/{case_id}")
 async def get_report(
     case_id: str,
-    format: str = Query("html", regex="^(html|json)$"),
+    format: str = Query("html", pattern="^(html|json)$"),
     investigator: Dict[str, Any] = Depends(get_current_investigator)
 ):
     """Generates and downloads JSON or HTML forensic reports."""
