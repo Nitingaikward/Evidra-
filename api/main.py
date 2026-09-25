@@ -70,7 +70,7 @@ def get_me(investigator: dict = Depends(get_current_investigator)):
 # Unified Frontend Gateway (Reverse Proxy to Frontend)
 # Allows accessing the complete UI and Backend on the exact same port (8000)
 # -------------------------------------------------------------------------
-FRONTEND_DEV_URL = os.environ.get("FRONTEND_DEV_URL", "http://127.0.0.1:5173")
+FRONTEND_DEV_URL = os.environ.get("FRONTEND_DEV_URL", "http://127.0.0.1:8080")
 
 @app.api_route("/{full_path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"])
 async def reverse_proxy_frontend(request: Request, full_path: str):
