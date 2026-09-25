@@ -38,8 +38,7 @@ def main():
     # 2. Start Frontend UI
     print(" [2/2] Starting Frontend UI Engine ...")
     is_windows = sys.platform.startswith("win")
-    npm_cmd = "npm.cmd run dev -- --host 127.0.0.1 --port 5173" if is_windows else "npm run dev -- --host 127.0.0.1 --port 5173"
-
+    npm_cmd = "npm.cmd run dev -- --host 127.0.0.1 --port 8080" if is_windows else "npm run dev -- --host 127.0.0.1 --port 8080"
     frontend_proc = subprocess.Popen(
         npm_cmd,
         cwd=frontend_dir,
